@@ -27,7 +27,22 @@ CLASS_NAMES = [
     "leaf_miner",
 ]
 
+import gdown
+
 MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models", "tomato_resnet18.pth")
+
+# Auto-download model if not present
+if not os.path.exists(MODEL_PATH):
+    os.makedirs("models", exist_ok=True)
+    print("Downloading model from Google Drive...")
+    gdown.download(
+        "https://drive.google.com/uc?id=1k64jh39dntpDcvNFG01gsmUu1xfYb2pZ",
+        MODEL_PATH,
+        quiet=False
+    )
+    print("Model downloaded!")
+
+# MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models", "tomato_resnet18.pth")
 
 TRANSFORM = transforms.Compose([
     transforms.Resize((224, 224)),
