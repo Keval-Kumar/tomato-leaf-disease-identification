@@ -1,16 +1,4 @@
-<!-- <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
-</html> -->
+<!-- 
 <!doctype html>
 <html lang="en">
   <head>
@@ -19,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tomato Leaf Disease Identifier</title>
 
-    <!-- PWA Support -->
+    
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#16a34a" />
 
@@ -27,7 +15,6 @@
   <body>
     <div id="root"></div>
 
-    <!-- Service Worker for PWA -->
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {
@@ -37,5 +24,28 @@
     </script>
 
     <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html> -->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tomato Leaf Disease Identifier</title>
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#16a34a" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker.register("/sw.js");
+        });
+      }
+    </script>
   </body>
 </html>
