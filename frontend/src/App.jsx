@@ -748,7 +748,7 @@ function HomePage() {
                 </button>
               </motion.div>
               <div className="mt-10 grid max-w-2xl grid-cols-1 gap-4 sm:grid-cols-3">
-                {[["94%+","Accuracy"],["10 classes","Tomato diseases"],["Local","No internet needed"]].map(([value,label],idx)=>(
+                {[["94%+","Accuracy"],["10 classes","Tomato diseases"],["blur/dark","image validation"]].map(([value,label],idx)=>(
                   <motion.div key={label} initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} transition={{delay:0.72+idx*0.1,duration:0.45}}
                     className="glass ring-glow rounded-3xl border border-white/20 p-5 text-white">
                     <div className="text-2xl font-bold">{value}</div>
