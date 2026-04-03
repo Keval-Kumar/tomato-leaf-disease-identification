@@ -317,7 +317,7 @@ export default function PredictionPage() {
   useEffect(() => {
     const checkServer = async () => {
       try {
-        const res = await fetch(`${FLASK_PROXY_URL}/health`, { signal: AbortSignal.timeout(3000) });
+        const res = await fetch(`${FLASK_PROXY_URL}/health`, { signal: AbortSignal.timeout(60000) });
         setServerOnline(res.ok);
       } catch { setServerOnline(false); }
     };
