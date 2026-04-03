@@ -250,7 +250,8 @@ function AccountDashboard({ user, onSignOut }) {
 
   // Load REAL scan history from localStorage (saved by PredictionsPage)
   const [scanHistory, setScanHistory] = useState(()=>{
-    try { return JSON.parse(localStorage.getItem("agroai_scans")||"[]"); } catch{ return []; }
+    // try { return JSON.parse(localStorage.getItem("agroai_scans")||"[]"); } catch{ return []; }
+    try { return JSON.parse(localStorage.getItem("agroai_scan_history")||"[]"); } catch{ return []; }
   });
 
   // Load real alert saves
@@ -462,7 +463,8 @@ function AccountDashboard({ user, onSignOut }) {
                 <div className="flex items-center justify-between mb-2">
                   <div className="text-xs font-medium" style={{color:"#b2bec3"}}>Your disease scan history ({scanHistory.length} scans)</div>
                   {scanHistory.length>0 && (
-                    <button onClick={()=>{localStorage.removeItem("agroai_scans");setScanHistory([]);}}
+                    // <button onClick={()=>{localStorage.removeItem("agroai_scans");setScanHistory([]);}}
+                    <button onClick={()=>{localStorage.removeItem("agroai_scan_history");setScanHistory([]);}}
                       className="text-[11px] font-semibold" style={{color:"#e74c3c"}}>Clear All</button>
                   )}
                 </div>
