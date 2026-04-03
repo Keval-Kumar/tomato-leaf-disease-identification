@@ -7,7 +7,8 @@ import {
   Globe, Check, Cpu, Sparkles,
 } from "lucide-react";
 
-const FLASK_PROXY_URL = "http://localhost:5000";
+// const FLASK_PROXY_URL = "http://localhost:5000";
+const FLASK_PROXY_URL = "https://tomato-leaf-disease-identification.onrender.com";
 
 const DISEASE_DETAILS = {
   leaf_curl_virus: {
