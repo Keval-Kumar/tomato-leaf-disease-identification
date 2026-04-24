@@ -253,10 +253,10 @@ MODEL_PATH = MODELS_DIR / "tomato_resnet18.pth"
 
 
 # Validation thresholds
-DARK_MEAN_THRESHOLD = 50.0
+DARK_MEAN_THRESHOLD = 60.0
 DARK_P90_THRESHOLD = 95.0
 DARK_RATIO_THRESHOLD = 0.75
-BLUR_LAPLACIAN_VARIANCE_THRESHOLD = 80.0
+BLUR_LAPLACIAN_VARIANCE_THRESHOLD = 100.0
 
 
 def is_too_dark(image: Image.Image) -> bool:
@@ -265,10 +265,16 @@ def is_too_dark(image: Image.Image) -> bool:
     p90_brightness = float(np.percentile(gray, 90))
     dark_ratio = float(np.mean(gray < 40))
 
+    # return (
+    #     (mean_brightness < DARK_MEAN_THRESHOLD and p90_brightness < DARK_P90_THRESHOLD)
+    #     or dark_ratio > DARK_RATIO_THRESHOLD
+    # )
     return (
-        (mean_brightness < DARK_MEAN_THRESHOLD and p90_brightness < DARK_P90_THRESHOLD)
+        mean_brightness < DARK_MEAN_THRESHOLD          # catches uniformly dim images
+        or (mean_brightness < DARK_MEAN_THRESHOLD and p90_brightness < DARK_P90_THRESHOLD)
         or dark_ratio > DARK_RATIO_THRESHOLD
     )
+
 
 
 def is_too_blurry(image: Image.Image) -> bool:
