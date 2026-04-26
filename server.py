@@ -8,6 +8,7 @@ import torch
 import torch.nn as nn
 from torchvision import models, transforms
 from PIL import Image
+import numpy as np
 
 app = Flask(__name__)
 CORS(app, origins=["*"])
@@ -27,7 +28,7 @@ CLASS_NAMES = [
     "leaf_miner",
 ]
 
-import gdown
+# import gdown
 
 MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models", "tomato_resnet18.pth")
 
@@ -43,6 +44,46 @@ if not os.path.exists(MODEL_PATH):
     print("Model downloaded!")
 
 # MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models", "tomato_resnet18.pth")
+
+# Validation thresholds for dark / blurry images
+DARK_MEAN_THRESHOLD = 50.0
+DARK_P90_THRESHOLD = 95.0
+DARK_RATIO_THRESHOLD = 0.75
+BLUR_LAPLACIAN_VARIANCE_THRESHOLD = 80.0
+
+
+def is_too_dark(image: Image.Image) -> bool:
+    gray = np.asarray(image.convert("L"), dtype=np.float32)
+    mean_brightness = float(gray.mean())
+    p90_brightness = float(np.percentile(gray, 90))
+    dark_ratio = float(np.mean(gray < 40))
+    return (
+        (mean_brightness < DARK_MEAN_THRESHOLD and p90_brightness < DARK_P90_THRESHOLD)
+        or dark_ratio > DARK_RATIO_THRESHOLD
+    )
+
+
+def is_too_blurry(image: Image.Image) -> bool:
+    gray = np.asarray(image.convert("L"), dtype=np.float32)
+    padded = np.pad(gray, ((1, 1), (1, 1)), mode="edge")
+    laplacian = (
+        -4 * padded[1:-1, 1:-1]
+        + padded[:-2, 1:-1]
+        + padded[2:, 1:-1]
+        + padded[1:-1, :-2]
+        + padded[1:-1, 2:]
+    )
+    sharpness = float(laplacian.var())
+    return sharpness < BLUR_LAPLACIAN_VARIANCE_THRESHOLD
+
+
+def validate_image(image: Image.Image) -> str | None:
+    if is_too_dark(image):
+        return "Image is too dark. Please retake the photo in better lighting."
+    if is_too_blurry(image):
+        return "Image is too blurry. Please retake the photo with better focus."
+    return None
+
 
 TRANSFORM = transforms.Compose([
     transforms.Resize((224, 224)),
@@ -154,6 +195,11 @@ def analyze():
             return jsonify({"error": "No imageBase64 field in request."}), 400
 
         pil_img = Image.open(io.BytesIO(base64.b64decode(img_b64))).convert("RGB")
+
+        validation_error = validate_image(pil_img)
+        if validation_error:
+            return jsonify({"error": validation_error}), 400
+
         result  = predict(pil_img)
 
         return jsonify({
