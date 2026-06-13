@@ -16,7 +16,7 @@
 # Python
 __pycache__/
 *.py[cod]
-*.pth
+# *.pth
 .venv/
 venv/
 *.egg-info/
@@ -30,7 +30,7 @@ secrets.py
 config.py
 
 # ML Models (large files)
-models/*.pth
+# models/*.pth
 models/*.h5
 models/*.pkl
 data/
